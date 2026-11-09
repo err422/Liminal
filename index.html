@@ -9,39 +9,69 @@
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
-<div id="overlay"><div class="panel">
- <div class="k">Liminal Studios · Build 0.7</div><h1>LIMINAL</h1><div class="sub">THE SHALLOWS · SECTOR 01</div>
- <p id="intro">There is no way out. Survive as long as you can and score points for every second alive and every thing you kill.<br><br>Your light repels them for a moment — but it drains fast, light carries, and it blinds you: switch it off and your eyes need time to find the dark again. Your 12 gauge has two shells; every shot is heard across the complex. They learn. They multiply.</p>
- <p><b>WASD</b> move · <b>MOUSE</b> look · <b>SHIFT</b> sprint · <b>F</b> light · <b>LMB/RMB</b> fire 1/2 barrels · <b>R</b> reload · <b>ESC</b> pause</p>
- <button id="start">ENTER THE COMPLEX</button>
- <p class="small">NEW LAYOUT EVERY RUN</p>
-</div></div>
-<div id="hud">
- <div style="left:22px;top:20px">LIMINAL <span style="opacity:.4">/</span> THE SHALLOWS<div id="obj" style="margin-top:8px;color:#e6c98a">SCORE 0 · 0:00</div><div id="thr" style="margin-top:4px;opacity:.8">THREAT 1.0 · KILLS 0</div></div>
- <div style="right:22px;top:20px;text-align:right"><div id="ls">LIGHT · ON</div><div class="bar" style="margin-left:auto"><i id="bat"></i></div><div id="bt" style="margin-top:6px">BATTERY 100%</div><div class="bar" style="margin-left:auto;height:3px"><i id="sta" style="background:#d8c98c"></i></div></div>
- <div id="cross"></div><div id="warn"></div><div id="msg"></div>
- <div style="right:22px;bottom:20px;text-align:right;opacity:.7">WASD MOVE · SHIFT SPRINT · F LIGHT<br>LMB 1 BARREL · RMB 2 BARRELS · R RELOAD</div>
- <div id="ammo" style="left:22px;bottom:20px;font-size:12px;letter-spacing:3px;color:#e6c98a">●● · SHELLS 6</div>
-</div>
-<div id="vig"></div><div id="dmg"></div><canvas id="noise" width="96" height="96"></canvas><div id="flash"></div><div id="after"></div>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="./src/config.js"></script>
-<!-- Classic scripts share the page's global scope. Keep this dependency order. -->
-<script src="./src/core/scene.js"></script>
-<script src="./src/world/materials.js"></script>
-<script src="./src/world/water.js"></script>
-<script src="./src/world/generation.js"></script>
-<script src="./src/world/collision.js"></script>
-<script src="./src/player/flashlight.js"></script>
-<script src="./src/systems/audio.js"></script>
-<script src="./src/enemies/monster.js"></script>
-<script src="./src/enemies/ai.js"></script>
-<script src="./src/systems/scoring.js"></script>
-<script src="./src/systems/pickups.js"></script>
-<script src="./src/player/weapon.js"></script>
-<script src="./src/player/movement.js"></script>
-<script src="./src/player/vision.js"></script>
-<script src="./src/ui/hud.js"></script>
-<script src="./src/core/loop.js"></script>
+  <div id="overlay">
+    <div class="panel">
+      <div class="k">Liminal Studios · Build 0.7</div>
+      <h1>LIMINAL</h1>
+      <div class="sub">THE SHALLOWS · SECTOR 01</div>
+      <p id="intro">
+        There is no way out. Survive as long as you can and score points for every second alive and every thing you kill.<br><br>
+        Your light repels them for a moment — but it drains fast, light carries, and it blinds you: switch it off and your eyes need time to find the dark again. Your 12 gauge has two shells; every shot is heard across the complex. They learn. They multiply.
+      </p>
+      <p>
+        <b>WASD</b> move · <b>MOUSE</b> look · <b>SHIFT</b> sprint · <b>F</b> light · <b>LMB/RMB</b> fire 1/2 barrels · <b>R</b> reload · <b>ESC</b> pause
+      </p>
+      <button id="start">ENTER THE COMPLEX</button>
+      <p class="small">NEW LAYOUT EVERY RUN</p>
+    </div>
+  </div>
+
+  <div id="hud">
+    <div style="left:22px;top:20px">
+      LIMINAL <span style="opacity:.4">/</span> THE SHALLOWS
+      <div id="obj" style="margin-top:8px;color:#e6c98a">SCORE 0 · 0:00</div>
+      <div id="thr" style="margin-top:4px;opacity:.8">THREAT 1.0 · KILLS 0</div>
+    </div>
+    <div style="right:22px;top:20px;text-align:right">
+      <div id="ls">LIGHT · ON</div>
+      <div class="bar" style="margin-left:auto"><i id="bat"></i></div>
+      <div id="bt" style="margin-top:6px">BATTERY 100%</div>
+      <div class="bar" style="margin-left:auto;height:3px"><i id="sta" style="background:#d8c98c"></i></div>
+    </div>
+    <div id="cross"></div>
+    <div id="warn"></div>
+    <div id="msg"></div>
+    <div style="right:22px;bottom:20px;text-align:right;opacity:.7">
+      WASD MOVE · SHIFT SPRINT · F LIGHT<br>
+      LMB 1 BARREL · RMB 2 BARRELS · R RELOAD
+    </div>
+    <div id="ammo" style="left:22px;bottom:20px;font-size:12px;letter-spacing:3px;color:#e6c98a">●● · SHELLS 6</div>
+  </div>
+
+  <div id="vig"></div>
+  <div id="dmg"></div>
+  <canvas id="noise" width="96" height="96"></canvas>
+  <div id="flash"></div>
+  <div id="after"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="./src/config.js"></script>
+  <!-- Classic scripts share the page's global scope. Keep this dependency order. -->
+  <script src="./src/core/scene.js"></script>
+  <script src="./src/world/materials.js"></script>
+  <script src="./src/world/water.js"></script>
+  <script src="./src/world/generation.js"></script>
+  <script src="./src/world/collision.js"></script>
+  <script src="./src/player/flashlight.js"></script>
+  <script src="./src/systems/audio.js"></script>
+  <script src="./src/enemies/monster.js"></script>
+  <script src="./src/enemies/ai.js"></script>
+  <script src="./src/systems/scoring.js"></script>
+  <script src="./src/systems/pickups.js"></script>
+  <script src="./src/player/weapon.js"></script>
+  <script src="./src/player/movement.js"></script>
+  <script src="./src/player/vision.js"></script>
+  <script src="./src/ui/hud.js"></script>
+  <script src="./src/core/loop.js"></script>
 </body>
 </html>

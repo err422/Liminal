@@ -1,10 +1,30 @@
 // World rendering: animated water shader material.
 // ---------- water shader ----------
-const waterMat=new THREE.ShaderMaterial({transparent:true,
- uniforms:{uT:{value:0},uC:{value:new THREE.Vector3()},uD:{value:new THREE.Vector3(0,0,-1)},uOn:{value:1},uF:{value:scene.fog.color},uFd:{value:scene.fog.density}},
- vertexShader:`varying vec3 vW;varying float vZ;
+const waterMat = new THREE.ShaderMaterial({
+  transparent: true,
+  uniforms: {
+    uT: {
+      value: 0
+    },
+    uC: {
+      value: new THREE.Vector3()
+    },
+    uD: {
+      value: new THREE.Vector3(0, 0, -1)
+    },
+    uOn: {
+      value: 1
+    },
+    uF: {
+      value: scene.fog.color
+    },
+    uFd: {
+      value: scene.fog.density
+    }
+  },
+  vertexShader: `varying vec3 vW;varying float vZ;
 void main(){vec4 w=modelMatrix*vec4(position,1.);vW=w.xyz;vec4 m=viewMatrix*w;vZ=-m.z;gl_Position=projectionMatrix*m;}`,
- fragmentShader:`uniform float uT,uOn,uFd;uniform vec3 uC,uD,uF;varying vec3 vW;varying float vZ;
+  fragmentShader: `uniform float uT,uOn,uFd;uniform vec3 uC,uD,uF;varying vec3 vW;varying float vZ;
 float h(vec2 p){return sin(p.x*1.3+uT*.9)*.5+sin(p.y*1.7-uT*.7)*.5+sin((p.x+p.y)*2.9+uT*1.6)*.25+sin((p.x-p.y)*5.1-uT*2.3)*.12;}
 void main(){
  vec2 p=vW.xz;float e=.06,a=h(p);
@@ -20,4 +40,5 @@ void main(){
  gl_FragColor=vec4(col,.88);
  #include <tonemapping_fragment>
  #include <colorspace_fragment>
-}`});
+}`
+});
