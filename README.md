@@ -1,51 +1,44 @@
-# LIMINAL — Build 0.7 Modular (Static)
+# LIMINAL — Milestone 1 + 2 prototype
 
-This is a modularized version of the Build 0.7 prototype. It keeps the original classic-script runtime and Three.js global build, but divides the game into the requested source folders.
+First-person co-op horror prototype: flashlight + dark-adaptation vision pipeline, health/insanity bar,
+seeded procedural maze, and 1–4 player WebRTC multiplayer. Static files only. No Node and no build step.
 
 ## Run it
+ES modules need http, not file://. Pick one:
+- VS Code: right-click `index.html` -> Open with Live Server
+- Terminal: `python3 -m http.server 8000` in this folder, then open http://localhost:8000
 
-- **Quick local test:** open `index.html` in a modern desktop browser. The game loads Three.js from jsDelivr, so an internet connection is required.
-- **GitHub Pages:** upload the contents of this folder to the repository root (or publish this folder as the Pages source). Enable Pages from the `main` branch and `/ (root)`.
-- No Node.js, npm, Vite, backend, or build command is required.
+Needs internet at load (Three.js from jsDelivr, PeerJS from unpkg, PeerJS cloud for signaling).
 
-## Source layout
+## Deploy (GitHub Pages)
+Push this folder to a repo, then Settings -> Pages -> Deploy from branch -> `/ (root)`. `.nojekyll` is included.
 
-```text
-src/
-├── config.js
-├── core/
-│   ├── scene.js
-│   └── loop.js
-├── world/
-│   ├── generation.js
-│   ├── materials.js
-│   ├── water.js
-│   └── collision.js
-├── player/
-│   ├── movement.js
-│   ├── flashlight.js
-│   ├── vision.js
-│   └── weapon.js
-├── enemies/
-│   ├── monster.js
-│   └── ai.js
-├── systems/
-│   ├── audio.js
-│   ├── pickups.js
-│   └── scoring.js
-└── ui/
-    └── hud.js
-```
+## Play
+- Host a room: share the 5-letter code. Friends enter it and Join. Host presses "Enter the maze".
+- Test alone with two browser tabs (one hosts, one joins).
+- W A S D move, Shift sprint, F flashlight, E interact, click the screen to capture the mouse.
+- Reach the green EXIT to escape. Batteries sit in dead ends (E).
+- Dev keys: `[` / `]` insanity -/+10, `-` take 10 damage (to test the bar and permadeath).
 
-## Important architecture note
+## Files
+| File | Job |
+|---|---|
+| `js/config.js` | Every tuning number (speeds, battery, adaptation rate, net rate) |
+| `js/maze.js` | Pure seeded generator. The host shares only the seed; every client builds the identical maze |
+| `js/vision.js` | Scene -> HDR target -> eye model (exposure/adaptation, Purkinje desaturation, rod grain, subtle periphery, bright-light dazzle) |
+| `js/game.js` | World, player controller, flashlight/battery, insanity, pickups, HUD |
+| `js/net.js` | PeerJS star topology: clients -> host, host relays. Room codes, lobby, join/leave |
+| `js/remote.js` | Remote players, interpolated ~110 ms in the past |
 
-These files are **classic browser scripts**, not ES modules. They intentionally share the page's global lexical scope so the game can remain directly hostable on GitHub Pages and can be opened as a local HTML file. The script order in `index.html` is significant; preserve it when adding or moving scripts.
+## How the systems work
+- Dark adaptation: `adapt` eases toward 1 in the dark (fast start, long tail) and collapses when lit. Exposure = `EXPOSURE_MAX ^ adapt`. Turning the flashlight on while adapted triggers a dazzle proportional to adaptation; turning it off leaves you nearly blind until you readapt.
+- Insanity cannot kill: it caps usable health at 100 - insanity (never below 10%). Only damage reduces `hp` to 0.
+- Item sync: clients ask the host to pick up an item, and the host decides (first wins) and broadcasts.
 
-The current split is functional rather than a full dependency-injection rewrite: some modules still communicate through shared game state (`P`, `scene`, `mons`, etc.). This keeps the migration low-risk while making each system much easier to locate. A later refactor can move those shared values behind explicit module APIs without changing the static deployment model.
+## Not built yet
+Creatures/Mimic and spawn director (M4), inventory and equipment (M5), hallucinations and audio (M6), anomalies,
+host-disconnect recovery, voice chat. Free PeerJS cloud signaling has no TURN, so some strict networks will fail to connect.
 
-## Notes
-
-- Three.js is loaded from `https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js`.
-- Procedural geometry and textures are generated at runtime, so the asset folders are placeholders for future authored assets.
-- `randFree()` now falls back to the farthest valid navigation cell it found rather than blindly returning the map origin. This prevents an unlucky spawn search from placing a monster or pickup at `(0, 0)`.
-- Best score is stored in browser `localStorage`.
+## Untested
+This was written and syntax-checked without a browser. Expect to tune light intensities in `game.js`
+and `EXPOSURE_MAX` in `config.js` once you see it running.
